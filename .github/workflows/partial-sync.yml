@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: notion-sync
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3  # 更新到更新的版本
 
       - name: Download cache storage of last build
         uses: dawidd6/action-download-artifact@v2
@@ -20,12 +20,23 @@ jobs:
           name: notion-sync-storage
           path: .cache
 
-      - name: Setup environment
-        uses: actions/setup-node@v2.2.0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  # 更新到最新版本
         with:
-          always-auth: false
           node-version: 16.x
-          cache: yarn
+
+      # 单独配置 yarn 缓存
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - run: yarn
 
