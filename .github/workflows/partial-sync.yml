@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: notion-sync
     steps:
-      - uses: actions/checkout@v3  # 更新到更新的版本
+      - uses: actions/checkout@v4
 
       - name: Download cache storage of last build
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         continue-on-error: true
         with:
           workflow: partial-sync.yml
@@ -21,17 +21,16 @@ jobs:
           path: .cache
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4  # 更新到最新版本
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 20
 
-      # 单独配置 yarn 缓存
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Cache yarn dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}

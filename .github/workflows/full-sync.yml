@@ -8,13 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: notion-sync
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup environment
-        uses: actions/setup-node@v2.2.0
+        uses: actions/setup-node@v4
         with:
-          always-auth: false
-          node-version: 16.x
+          node-version: 20
           cache: yarn
 
       - run: yarn
