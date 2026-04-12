@@ -40,9 +40,12 @@
 </details>
 
 <details><summary>如何申请 Github API TOKEN</summary>
-请参考：https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token.
+请参考：[Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)。
 
-这里不需要勾选任何权限。
+本项目通过 GraphQL 读取当前登录用户的 `viewer.starredRepositories`，因此 **`TOKEN_OF_GITHUB` 必须是「你的用户身份」有效的 token**：
+
+- **Classic PAT**：至少勾选 **`read:user`**（只读用户信息即可覆盖 star 列表场景）。若 Actions 日志出现 **`401 Bad credentials`**，通常是 token 过期、被撤销、复制不完整，或误把 **仓库自带的 `GITHUB_TOKEN`** 写进了 `TOKEN_OF_GITHUB`（它不是你的用户 token，无法满足 `viewer` 查询）。
+- **Fine-grained PAT**：需自行确认权限足以访问与你账号相关的 GraphQL 数据；若不确定，优先使用 **Classic** 并勾选 `read:user`。
 </details>
 
 ## 开始同步
